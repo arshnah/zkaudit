@@ -1,0 +1,15 @@
+done:
+- HAR parsing, plaintext/URL-encoded/base64/case-folded variant scanning across request URL, headers, body, and response headers, body
+- ciphertext-likelihood heuristic: base64-density plus byte-level Shannon entropy (rune-level entropy silently corrupts on real binary ciphertext, invalid UTF-8 sequences collapse into repeated replacement characters and understate entropy, found this by testing against a real CipherDrop capture where the old heuristic never fired)
+- CLI (cmd/zkaudit)
+- synthetic leaky and clean HAR test fixtures
+- real bug found and fixed via manual CLI testing: duplicate findings when a secret's case-folded variant equals the original
+- real bug found and fixed via manual CLI testing against live traffic: a 2-character secret ("hi") produced 6 coincidental false positives (matched inside "while", "This", "hides", binary font bytes), added MinReliableSecretLength with a CLI warning
+- multi-flow audits: -har accepts comma-separated paths, merged into one scan
+- cookie/session/auth header and cookie-array redaction (Redact), -redact-out CLI flag to produce a sanitized HAR before sharing one
+- markdown audit report generation (-report) and pass/fail SVG badge generation (-badge)
+- real audit run against actual CipherDrop traffic (upload flow): PASS, using a distinctive test secret, plus confirmed via redaction that this particular capture had no cookies to strip (site doesn't use session auth on this endpoint)
+
+todo:
+- audit CipherDrop's other flows (view/decrypt an existing drop, not just upload) and merge into one multi-flow report
+- git init
